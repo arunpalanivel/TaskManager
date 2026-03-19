@@ -5,23 +5,23 @@ public class TaskService {
 	
 	private static List<Task> tasks = new ArrayList<>();
 	
-	public String addTask(Task task) {
+	public String addTask(long id, String taskName, String description, boolean isCompleted) {
 		for(Task t: tasks) {
-			if(t.getId() == task.getId()) {
+			if(t.getId() == id) {
 				return "Id is already exists";
 			}
 		}
-		tasks.add(task);
+		tasks.add(new Task(id,taskName,description,isCompleted));
 		return "Task added successfully";
 	}
 	
-	public Task viewById(Long id) {
+	public String viewById(long id) {
 		for(Task t: tasks) {
 			if(t.getId() == id) {
-				return t;
+				return t.getId() + " " +  t.getTaskName() + " " + t.getDescription() + " " + t.isCompletd();
 			}
 		}
-		return null;
+		return "No task with given id";
 	}
 	
 	public List<Task> viewAll(){
