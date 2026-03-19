@@ -20,20 +20,29 @@ public class Task {
 	public String getTaskName() {
 		return taskName;
 	}
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
 	
 	public String getDescription() {
 		return description;
 	}
 	
-	public boolean isCompletd() {
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public boolean getIsCompletd() {
 		return isCompleted;
+	}
+	
+	public void setIsCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 	
 	public String toString() {
 		return "Task Id: " + id + ", Task Name: " + taskName + ", Description: " + description + ", Is completed: " + isCompleted;
 	}
-	
-	
 	
 
 }
