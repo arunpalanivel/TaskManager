@@ -16,12 +16,16 @@ public class Main {
 			System.out.println("5. Delete Task");
 			System.out.println("6. Quit");
 			
+			System.out.print("Enter your choice: ");			
 			choice = Integer.parseInt(scanner.nextLine());
 			
 			switch(choice){
 				case 1:{
+					System.out.print("Enter id: ");
 					long id = Integer.parseInt(scanner.nextLine());
+					System.out.print("Enter Task Name: ");
 					String taskName = scanner.nextLine();
+					System.out.print("Enter Description: ");
 					String description = scanner.nextLine();
 					boolean isCompleted = false;
 					String result = tm.addTask(id,taskName,description,isCompleted);
@@ -32,6 +36,7 @@ public class Main {
 					
 				
 				case 2:{
+					System.out.print("Enter id");
 					long id = Integer.parseInt(scanner.nextLine());
 					String result = tm.viewById(id);
 					System.out.println(result);
@@ -45,6 +50,30 @@ public class Main {
 				}
 				
 				
+				case 4:{
+					System.out.print("Enter id: ");
+					long id = Integer.parseInt(scanner.nextLine());
+					System.out.print("Enter Task Name: ");
+					String taskName = scanner.nextLine();
+					System.out.print("Enter Description: ");
+					String description = scanner.nextLine();
+					System.out.print("Enter Status(true/false): ");
+					boolean isCompleted = Boolean.parseBoolean(scanner.nextLine());
+					String result = tm.update(id,taskName,description,isCompleted);
+					System.out.println(result);
+					break;
+					
+				}
+				
+				
+				case 5: {
+					System.out.print("Enter id: ");
+					long id = Integer.parseInt(scanner.nextLine());
+					String result = tm.deleteTask(id);
+					System.out.println(result);
+					break;
+					
+				}
 					
 					
 				case 6:
@@ -54,10 +83,6 @@ public class Main {
 				default:
 					System.out.println("Enter valid number");
 					break;
-					
-			
-			
-			
 			
 		}
 		
