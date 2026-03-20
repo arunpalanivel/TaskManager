@@ -4,23 +4,26 @@ public class Task {
 	private String description;
 	private boolean isCompleted;
 	
-	
-	Task(Long id, String taskName, String description, boolean isCompleted){
+	Task(long id, String taskName, String description, boolean isCompleted){
 		this.id = id;
-		this.taskName = taskName;
-		this.description = description;
+		setTaskName(taskName);
+		setDescription(description);
 		this.isCompleted = isCompleted;
 	}
 	
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 	
 	public String getTaskName() {
 		return taskName;
 	}
+	
 	public void setTaskName(String taskName) {
-		this.taskName = taskName;
+		if(taskName == null || taskName.trim().isEmpty()) {
+			throw new IllegalArgumentException("Task name cannot be empty");
+		}
+		this.taskName = taskName.trim();
 	}
 	
 	public String getDescription() {
@@ -28,10 +31,13 @@ public class Task {
 	}
 	
 	public void setDescription(String description) {
+		if(description == null || description.trim().isEmpty()) {
+			throw new IllegalArgumentException("Task description cannot be empty");
+		}
 		this.description = description;
 	}
 	
-	public boolean getIsCompletd() {
+	public boolean getIsCompleted() {
 		return isCompleted;
 	}
 	
@@ -42,6 +48,4 @@ public class Task {
 	public String toString() {
 		return "Task Id: " + id + ", Task Name: " + taskName + ", Description: " + description + ", Is completed: " + isCompleted;
 	}
-	
-
 }

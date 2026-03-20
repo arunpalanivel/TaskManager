@@ -1,11 +1,10 @@
 import java.util.Scanner;
 
-
 public class Main {
 	public static void main(String[] args) {
 		TaskService tm = new TaskService();
-		
 		Scanner scanner = new Scanner(System.in);
+		
 		int choice = 0;
 		while(choice != 6){
 			System.out.println("Welcome to Task Manager");
@@ -15,35 +14,46 @@ public class Main {
 			System.out.println("4. Update Task");
 			System.out.println("5. Delete Task");
 			System.out.println("6. Quit");
+			System.out.print("Enter your choice: ");	
 			
-			System.out.print("Enter your choice: ");			
-			choice = Integer.parseInt(scanner.nextLine());
+			try {
+				choice = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Error: Enter a number " + e.getMessage());
+			}
 			
 			switch(choice){
-				case 1:{
-					System.out.println("Add task to the list. ");
-					System.out.print("Enter id: ");
-					long id = Integer.parseInt(scanner.nextLine());
-					System.out.print("Enter Task Name: ");
-					String taskName = scanner.nextLine();
-					System.out.print("Enter Description: ");
-					String description = scanner.nextLine();
-					boolean isCompleted = false;
-					String result = tm.addTask(id,taskName,description,isCompleted);
-					System.out.println(result);
+				case 1:{ 
+					try {
+						System.out.println("Add task to the list. ");
+						System.out.print("Enter id: ");
+						long id = Long.parseLong(scanner.nextLine());
+						System.out.print("Enter Task Name: ");
+						String taskName = scanner.nextLine();
+						System.out.print("Enter Description: ");
+						String description = scanner.nextLine();
+						boolean isCompleted = false;
+						String result = tm.addTask(id,taskName,description,isCompleted);
+						System.out.println(result);
+					} catch (NumberFormatException e) {
+						System.out.println("Error: Enter a number " + e.getMessage());
+					} catch(IllegalArgumentException e) {
+						System.out.println("Error: " + e.getMessage());
+					}
 					break;
-					
 				}
 					
-				
 				case 2:{
-					System.out.println("View task by using id. ");
-					System.out.print("Enter id: ");
-					long id = Integer.parseInt(scanner.nextLine());
-					String result = tm.viewById(id);
-					System.out.println(result);
+					try {
+						System.out.println("View task by using id. ");
+						System.out.print("Enter id: ");
+						long id = Long.parseLong(scanner.nextLine());
+						String result = tm.viewById(id);
+						System.out.println(result);
+					} catch (NumberFormatException e) {
+						System.out.println("Error: Enter a number " + e.getMessage());
+					}
 					break;
-					
 				}
 				
 				case 3:{
@@ -52,13 +62,11 @@ public class Main {
 					break;
 				}
 				
-				
 				case 4:{
-					System.out.println("Update task by using id. ");
-					System.out.print("Enter id: ");
-					long id = Integer.parseInt(scanner.nextLine());
-					boolean isExist = tm.search(id);
-					if(isExist) {
+					try {
+						System.out.println("Update task by using id. ");
+						System.out.print("Enter id: ");
+						long id = Long.parseLong(scanner.nextLine());
 						System.out.println("What you want to update(name/ description/ status/ All?): ");
 						System.out.println("1. name");
 						System.out.println("2. description");
@@ -69,23 +77,23 @@ public class Main {
 						int updateChoice = Integer.parseInt(scanner.nextLine());
 						switch (updateChoice) {
 							case 1: {
-								System.out.print("Enter the name: ");
-								String name = scanner.nextLine();
-								System.out.println(tm.update(id, name));
+									System.out.print("Enter the name: ");
+									String name = scanner.nextLine();
+									System.out.println(tm.updateName(id, name));
 								break;
 							}
 							
 							case 2: {
 								System.out.print("Enter the description: ");
 								String description = scanner.nextLine();
-								System.out.println(tm.update(description,id));
+								System.out.println(tm.updateDescription(id,description));
 								break;
 							}
 							
 							case 3:{
-								System.out.print("Enter the description: ");
+								System.out.print("Enter the status(true/false): ");
 								boolean status = Boolean.parseBoolean(scanner.nextLine());
-								System.out.println(tm.update(id,status));
+								System.out.println(tm.updateStatus(id,status));
 								break;
 								
 							}
@@ -96,11 +104,10 @@ public class Main {
 								String description = scanner.nextLine();
 								System.out.print("Enter Status(true/false): ");
 								boolean isCompleted = Boolean.parseBoolean(scanner.nextLine());
-								String result = tm.update(id,taskName,description,isCompleted);
-								System.out.println(result);
+								String result = tm.updateAll(id,taskName,description,isCompleted);
+								System.out.println(result);	
 								break;
 							}
-								
 							
 							case 5:{
 								System.out.println("Changed mind? dont' want to update?");
@@ -110,34 +117,31 @@ public class Main {
 							default:{
 								System.out.println("Enter valid number");
 								break;
-							}
-								
-						
-						}
-							
-						
-					}
-					else {
-						System.out.println("No id exists.");
-						break;
+							}	
+						}				
+					} catch(NumberFormatException e) {
+						System.out.println("Error: Enter a number " + e.getMessage());
+					} catch(IllegalArgumentException e) {
+						System.out.println("Error: " + e.getMessage());
 					}
 					break;
-					
-					
 				}
-				
 				
 				case 5: {
-					System.out.println("Delete task by using id. ");
-					System.out.print("Enter id: ");
-					long id = Integer.parseInt(scanner.nextLine());
-					String result = tm.deleteTask(id);
-					System.out.println(result);
+					try {
+						System.out.println("Delete task by using id. ");
+						System.out.print("Enter id: ");
+						long id = Long.parseLong(scanner.nextLine());
+						String result = tm.deleteTask(id);
+						System.out.println(result);
+					} catch(NumberFormatException e) {
+						System.out.println("Error: Enter a number " + e.getMessage());
+					} catch(IllegalArgumentException e) {
+						System.out.println("Error: Enter a number " + e.getMessage());
+					}
 					break;
-					
 				}
-					
-					
+						
 				case 6:
 					System.out.println("Thank You");
 					break;
@@ -145,11 +149,8 @@ public class Main {
 				default:
 					System.out.println("Enter valid number");
 					break;
-			
+			}
 		}
-		
-		
-	
-
+		scanner.close();
+	}
 }
-		}}
