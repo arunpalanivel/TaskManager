@@ -1,4 +1,3 @@
-
 public class Task {
 	private final long id;
 	private String taskName;

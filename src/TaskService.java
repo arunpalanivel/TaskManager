@@ -29,26 +29,80 @@ public class TaskService {
 		
 	}
 	
-	public String update(long id, String taskName, String description, boolean isCompleted) {
+	
+	public String update(long id, String taskName) {
+		Task updateTask = null;
 		for(Task t: tasks) {
 			if(t.getId() == id) {
-				t.setTaskName(taskName);
-				t.setDescription(description);
-				t.setIsCompleted(isCompleted);
-				return "task updated";
+				updateTask = t;
 			}
 		}
-		return "No task exist with given id";
+		
+		updateTask.setTaskName(taskName);
+		return "Name Updated successfully";
+	}
+	
+	
+	public String update(String description, long id) {
+		Task updateTask = null;
+		for(Task t: tasks) {
+			if(t.getId() == id) {
+				updateTask = t;
+			}
+		}
+		
+		updateTask.setDescription(description);
+		return "Description Updated successfully";
+	}
+	
+	public String update(long id, boolean status) {
+		Task updateTask = null;
+		for(Task t: tasks) {
+			if(t.getId() == id) {
+				updateTask = t;
+			}
+		}
+		
+		updateTask.setIsCompleted(status);
+		return "Status Updated successfully";
+	}
+	
+	public String update(long id, String taskName, String description, boolean isCompleted) {
+		Task updateTask = null;
+		for(Task t: tasks) {
+			if(t.getId() == id) {
+				updateTask = t;
+			}
+		}
+		
+		updateTask.setDescription(description);
+		updateTask.setTaskName(taskName);
+		updateTask.setIsCompleted(isCompleted);
+		return "Task Updated successfully";
 	}
 	
 	public String deleteTask(long id) {
+		Task d = null;
 		for(Task t: tasks) {
 			if(t.getId() == id) {
-				tasks.remove(t);
-				return "Task deleted";
+				d = t;
+				
 			}
 		}
+		if(d != null) {
+			tasks.remove(d);
+			return "Task deleted";
+		}
 		return "Task is not deleted";
+	}
+	
+	public boolean search(long id) {
+		for(Task t: tasks) {
+			if(t.getId() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 
