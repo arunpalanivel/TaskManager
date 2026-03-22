@@ -1,83 +1,176 @@
 import java.util.List;
+import java.sql.Connection; 
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class TaskService {
+	private Connection getConnection() throws Exception{
+		String url = "jdbc:postgresql://localhost:5432/task_manager";
+		String user = "postgres";
+		String password = "postgres";
+		
+		return DriverManager.getConnection(url,user,password);
+	}
 	
-	private List<Task> tasks = new ArrayList<>();
-	
-	public String addTask(long id, String taskName, String description, boolean isCompleted) {
-		if(findById(id) != null) {
-			return "id is already exists";	
+	public String addTask(String taskName, String description, boolean isCompleted) {
+		String sql = "INSERT INTO task(taskname,description,iscompleted) VALUES(?,?,?)";
+		try (
+			Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+			ps.setString(1,taskName);
+			ps.setString(2, description);
+			ps.setBoolean(3, isCompleted);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				ResultSet rs = ps.getGeneratedKeys();
+				if(rs.next()) {
+					return "Task created with ID: " + rs.getLong(1);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		tasks.add(new Task(id,taskName,description,isCompleted));
-		return "Task added successfully";
+		return "Task not created";
 	}
 	
 	public String viewById(long id) {
-		Task result = findById(id);
-		if(result == null) {
-			return "Task not found";
+		String sql = "SELECT * FROM task WHERE id = ?";
+		
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				long taskId = rs.getLong("id");
+				String taskName = rs.getString("taskname");
+				String description = rs.getString("description");
+				boolean isCompleted = rs.getBoolean("iscompleted");
+				
+				Task t = new Task(taskId, taskName, description, isCompleted);
+				return t.toString();
+			}			
+			
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		return result.getId() + " " +  result.getTaskName() + " " + result.getDescription() + " " + result.getIsCompleted();	
+		return "Task not found";	
 	}
 	
 	public List<Task> viewAll(){
-		return new ArrayList<>(tasks);
+		List<Task> tasks = new ArrayList<>();
+		String sql = "SELECT * FROM task";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery()){
+			while(rs.next()) {
+				long id = rs.getLong("id");
+				String taskName = rs.getString("taskname");
+				String description = rs.getString("description");
+				boolean isCompleted = rs.getBoolean("iscompleted");
+				
+				Task t = new Task(id,taskName,description,isCompleted);
+				tasks.add(t);
+			}
+		} catch(Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return tasks;
 	}
 	
 	public String updateName(long id, String taskName) {
-		Task updateTask = findById(id);
-		if(updateTask == null) {
-			return "Task not found";	
+		String sql = "UPDATE task SET taskname = ? WHERE id = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, taskName);
+			ps.setLong(2, id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				return "Task updated successfully";
+			}
+		} catch(Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		updateTask.setTaskName(taskName);
-		return "Name Updated successfully";
+		return "Task not found";
 	}
 	
 	public String updateDescription(long id, String description) {
-		Task updateTask = findById(id);
-		if(updateTask == null) {
-			return "Task not found";	
+		String sql = "UPDATE task SET description = ? WHERE id = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, description);
+			ps.setLong(2, id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				return "Task updated successfully";
+			}
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		updateTask.setDescription(description);
-		return "Description Updated successfully";
+		return "Task not found";
 	}
 	
 	public String updateStatus(long id, boolean status) {
-		Task updateTask = findById(id);
-		if(updateTask == null) {
-			return "Task not found";	
+		String sql = "UPDATE task SET iscompleted = ? WHERE id = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setBoolean(1, status);
+			ps.setLong(2, id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				return "Task updated successfully";
+			}
+			
+		}catch(Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		updateTask.setIsCompleted(status);
-		return "Status Updated successfully";
+		return "Task not found";
 	}
 	
 	public String updateAll(long id, String taskName, String description, boolean isCompleted) {
-		Task updateTask = findById(id);
-		if(updateTask == null) {
-			return "Task not found";	
+		String sql = "UPDATE task SET taskname = ?, description = ?, iscompleted = ? WHERE id = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, taskName);
+			ps.setString(2,description);
+			ps.setBoolean(3,isCompleted);
+			ps.setLong(4,id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				return "Task updated successfully";
+			}
+		} catch(Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		updateTask.setDescription(description);
-		updateTask.setTaskName(taskName);
-		updateTask.setIsCompleted(isCompleted);
-		return "Task Updated successfully";
+		return "Task not found";
 	}
 	
 	public String deleteTask(long id) {
-		Task d = findById(id);
-		if(d == null) {
-			return "Task not found";	
-		}
-		tasks.remove(d);
-		return "Task deleted";
-	}
-	
-	public Task findById(long id) {
-		for(Task t: tasks) {
-			if(t.getId() == id) {
-				return t;
+		String sql = "DELETE FROM task WHERE id = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setLong(1, id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				return "Task deleted successfully";
 			}
+		}catch(Exception e) {
+			System.out.println("Error: " + e.getMessage());
 		}
-		return null;
+		return "Task not found";
 	}
 }
