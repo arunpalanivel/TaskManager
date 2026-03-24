@@ -1,14 +1,15 @@
+
 public class Task {
 	private final long id;
 	private String taskName;
 	private String description;
-	private boolean isCompleted;
+	private Status status;
 	
-	Task(long id, String taskName, String description, boolean isCompleted){
+	Task(long id, String taskName, String description, Status status){
 		this.id = id;
 		setTaskName(taskName);
 		setDescription(description);
-		this.isCompleted = isCompleted;
+		setStatus(status);
 	}
 	
 	public long getId() {
@@ -37,15 +38,18 @@ public class Task {
 		this.description = description;
 	}
 	
-	public boolean getIsCompleted() {
-		return isCompleted;
+	public Status getStatus() {
+		return status;
 	}
 	
-	public void setIsCompleted(boolean isCompleted) {
-		this.isCompleted = isCompleted;
+	public void setStatus(Status status) {
+		if(status == null) {
+			throw new IllegalArgumentException("Status cannot be null");
+		}
+		this.status = status;
 	}
 	
 	public String toString() {
-		return "Task Id: " + id + ", Task Name: " + taskName + ", Description: " + description + ", Is completed: " + isCompleted;
+		return "Task Id: " + id + ", Task Name: " + taskName + ", Description: " + description + ", Status: " + status;
 	}
 }

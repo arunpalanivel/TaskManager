@@ -15,14 +15,14 @@ public class TaskRepositoryImpl implements TaskRepository{
 	}
 	
 	@Override
-	public String addTask(String taskName, String description, boolean isCompleted) {
-		String sql = "INSERT INTO task(taskname,description,iscompleted) VALUES(?,?,?)";
+	public String addTask(Task t) {
+		String sql = "INSERT INTO task(taskname,description,status) VALUES(?,?,?)";
 		try (
 			Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
-			ps.setString(1,taskName);
-			ps.setString(2, description);
-			ps.setBoolean(3, isCompleted);
+			ps.setString(1,t.getTaskName());
+			ps.setString(2, t.getDescription());
+			ps.setString(3, t.getStatus().name());
 			
 			int rows = ps.executeUpdate();
 			
@@ -51,9 +51,9 @@ public class TaskRepositoryImpl implements TaskRepository{
 				long taskId = rs.getLong("id");
 				String taskName = rs.getString("taskname");
 				String description = rs.getString("description");
-				boolean isCompleted = rs.getBoolean("iscompleted");
+				String status = rs.getString("status");
 				
-				Task t = new Task(taskId, taskName, description, isCompleted);
+				Task t = new Task(taskId, taskName, description, Status.valueOf(status));
 				return t.toString();
 			}			
 			
@@ -74,9 +74,9 @@ public class TaskRepositoryImpl implements TaskRepository{
 				long id = rs.getLong("id");
 				String taskName = rs.getString("taskname");
 				String description = rs.getString("description");
-				boolean isCompleted = rs.getBoolean("iscompleted");
+				String status = rs.getString("status");
 				
-				Task t = new Task(id,taskName,description,isCompleted);
+				Task t = new Task(id,taskName,description,Status.valueOf(status));
 				tasks.add(t);
 			}
 		} catch(Exception e) {
@@ -124,11 +124,11 @@ public class TaskRepositoryImpl implements TaskRepository{
 	}
 	
 	@Override
-	public String updateStatus(long id, boolean status) {
-		String sql = "UPDATE task SET iscompleted = ? WHERE id = ?";
+	public String updateStatus(long id, Status status) {
+		String sql = "UPDATE task SET status = ? WHERE id = ?";
 		try(Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql)){
-			ps.setBoolean(1, status);
+			ps.setString(1, status.name());
 			ps.setLong(2, id);
 			
 			int rows = ps.executeUpdate();
@@ -144,13 +144,13 @@ public class TaskRepositoryImpl implements TaskRepository{
 	}
 	
 	@Override
-	public String updateAll(long id, String taskName, String description, boolean isCompleted) {
-		String sql = "UPDATE task SET taskname = ?, description = ?, iscompleted = ? WHERE id = ?";
+	public String updateAll(long id, Task t) {
+		String sql = "UPDATE task SET taskname = ?, description = ?, status = ? WHERE id = ?";
 		try(Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql)){
-			ps.setString(1, taskName);
-			ps.setString(2,description);
-			ps.setBoolean(3,isCompleted);
+			ps.setString(1, t.getTaskName());
+			ps.setString(2,t.getDescription());
+			ps.setString(3,t.getStatus().name());
 			ps.setLong(4,id);
 			
 			int rows = ps.executeUpdate();
@@ -181,4 +181,85 @@ public class TaskRepositoryImpl implements TaskRepository{
 		}
 		return "Task not found";
 	}
+	
+	@Override
+	public List<Task> getTaskTodo() {
+		List<Task> tasks = new ArrayList<>();
+		String sql = "SELECT * FROM task WHERE status = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, "TODO");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				long id = rs.getLong("id");
+				String taskName = rs.getString("taskname");
+				String description = rs.getString("description");
+				String status = rs.getString("status");
+				
+				Task t = new Task(id,taskName,description,Status.valueOf(status));
+				tasks.add(t);
+				return tasks;
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		
+		return null; 
+	}
+	
+	@Override
+	public List<Task> getTaskInProgress() {
+		List<Task> tasks = new ArrayList<>();
+		String sql = "SELECT * FROM task WHERE status = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, "IN_PROGRESS");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				long id = rs.getLong("id");
+				String taskName = rs.getString("taskname");
+				String description = rs.getString("description");
+				String status = rs.getString("status");
+				
+				Task t = new Task(id,taskName,description,Status.valueOf(status));
+				tasks.add(t);
+				return tasks;
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		return null; 
+	}
+	
+	
+	@Override
+	public List<Task> getTaskDone() {
+		List<Task> tasks = new ArrayList<>();
+		String sql = "SELECT * FROM task WHERE status = ?";
+		try(Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, "DONE");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				long id = rs.getLong("id");
+				String taskName = rs.getString("taskname");
+				String description = rs.getString("description");
+				String status = rs.getString("status");
+				
+				Task t = new Task(id,taskName,description,Status.valueOf(status));
+				tasks.add(t);
+				return tasks;
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		return null;  
+	}
+	
 }

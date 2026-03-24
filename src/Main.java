@@ -6,14 +6,17 @@ public class Main {
 		Scanner scanner = new Scanner(System.in);
 		
 		int choice = 0;
-		while(choice != 6){
+		while(choice != 9){
 			System.out.println("Welcome to Task Manager");
 			System.out.println("1. Add Task");
 			System.out.println("2. View Task");
 			System.out.println("3. View All Task");
 			System.out.println("4. Update Task");
 			System.out.println("5. Delete Task");
-			System.out.println("6. Quit");
+			System.out.println("6. Get Task TODO");
+			System.out.println("7. Get Task IN PROGRESS");
+			System.out.println("8. Get Task DONE");
+			System.out.println("9. Quit");
 			System.out.print("Enter your choice: ");	
 			
 			try {
@@ -30,8 +33,8 @@ public class Main {
 						String taskName = scanner.nextLine();
 						System.out.print("Enter Description: ");
 						String description = scanner.nextLine();
-						boolean isCompleted = false;
-						String result = tm.addTask(taskName,description,isCompleted);
+						Status status = Status.TODO;
+						String result = tm.addTask(taskName,description,status);
 						System.out.println(result);
 					} catch(IllegalArgumentException e) {
 						System.out.println("Error: " + e.getMessage());
@@ -87,8 +90,8 @@ public class Main {
 							}
 							
 							case 3:{
-								System.out.print("Enter the status(true/false): ");
-								boolean status = Boolean.parseBoolean(scanner.nextLine());
+								System.out.print("Enter the status(TODO/IN_PROGRESS/DONE): ");
+								Status status = Status.valueOf(scanner.nextLine().trim().toUpperCase());
 								System.out.println(tm.updateStatus(id,status));
 								break;
 								
@@ -98,9 +101,9 @@ public class Main {
 								String taskName = scanner.nextLine();
 								System.out.print("Enter Description: ");
 								String description = scanner.nextLine();
-								System.out.print("Enter Status(true/false): ");
-								boolean isCompleted = Boolean.parseBoolean(scanner.nextLine());
-								String result = tm.updateAll(id,taskName,description,isCompleted);
+								System.out.print("Enter Status(TODO/IN_PROGRESS/DONE): ");
+								Status status = Status.valueOf(scanner.nextLine().trim().toUpperCase());
+								String result = tm.updateAll(id,taskName,description,status);
 								System.out.println(result);	
 								break;
 							}
@@ -137,8 +140,44 @@ public class Main {
 					}
 					break;
 				}
-						
-				case 6:
+				
+				case 6:{
+					System.out.println("Task in Todo Status. ");
+					var t = tm.getTaskDone();
+					if(t == null) {
+						System.out.println("There is no task with TODO status.");
+					}
+					else {
+						System.out.println(t);
+					}
+					break;
+				}
+				
+				case 7:{
+					System.out.println("Task in In Progress Status. ");
+					var t = tm.getTaskInProgress();
+					if(t == null) {
+						System.out.println("There is no task with In Progress status.");
+					}
+					else {
+						System.out.println(t);
+					}
+					break;
+				}
+					
+				case 8:{
+					System.out.println("Task in Done Status. ");
+					var t = tm.getTaskDone();
+					if(t == null) {
+						System.out.println("There is no task with Done status.");
+					}
+					else {
+						System.out.println(t);
+					}
+					break;
+				}
+				
+				case 9:
 					System.out.println("Thank You");
 					break;
 					
