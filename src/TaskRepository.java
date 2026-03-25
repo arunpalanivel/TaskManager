@@ -10,6 +10,6 @@ public interface TaskRepository {
 	String updateName(long id, String taskName);
 	String updateDescription(long id, String description);
 	String updateStatus(long id, Status status);
-	String updateAll(long id, Task t);
+	String updateAll(long id, String taskName, String description, Status status);
 	String deleteTask(long id);
 }

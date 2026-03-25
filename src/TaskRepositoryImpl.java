@@ -10,7 +10,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 		String url = "jdbc:postgresql://localhost:5432/task_manager";
 		String user = "postgres";
 		String password = "postgres";
-		
 		return DriverManager.getConnection(url,user,password);
 	}
 	
@@ -25,7 +24,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 			ps.setString(3, t.getStatus().name());
 			
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				ResultSet rs = ps.getGeneratedKeys();
 				if(rs.next()) {
@@ -46,7 +44,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 			PreparedStatement ps = con.prepareStatement(sql)){
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
-			
 			if(rs.next()) {
 				long taskId = rs.getLong("id");
 				String taskName = rs.getString("taskname");
@@ -75,7 +72,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 				String taskName = rs.getString("taskname");
 				String description = rs.getString("description");
 				String status = rs.getString("status");
-				
 				Task t = new Task(id,taskName,description,Status.valueOf(status));
 				tasks.add(t);
 			}
@@ -94,7 +90,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 			ps.setLong(2, id);
 			
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				return "Task updated successfully";
 			}
@@ -113,7 +108,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 			ps.setLong(2, id);
 			
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				return "Task updated successfully";
 			}
@@ -132,7 +126,6 @@ public class TaskRepositoryImpl implements TaskRepository{
 			ps.setLong(2, id);
 			
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				return "Task updated successfully";
 			}
@@ -144,17 +137,16 @@ public class TaskRepositoryImpl implements TaskRepository{
 	}
 	
 	@Override
-	public String updateAll(long id, Task t) {
+	public String updateAll(long id, String taskName, String description, Status status) {
 		String sql = "UPDATE task SET taskname = ?, description = ?, status = ? WHERE id = ?";
 		try(Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql)){
-			ps.setString(1, t.getTaskName());
-			ps.setString(2,t.getDescription());
-			ps.setString(3,t.getStatus().name());
+			ps.setString(1, taskName);
+			ps.setString(2, description);
+			ps.setString(3, status.name());
 			ps.setLong(4,id);
-			
+
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				return "Task updated successfully";
 			}
@@ -170,9 +162,7 @@ public class TaskRepositoryImpl implements TaskRepository{
 		try(Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql)){
 			ps.setLong(1, id);
-			
 			int rows = ps.executeUpdate();
-			
 			if(rows > 0) {
 				return "Task deleted successfully";
 			}
@@ -195,18 +185,15 @@ public class TaskRepositoryImpl implements TaskRepository{
 				String taskName = rs.getString("taskname");
 				String description = rs.getString("description");
 				String status = rs.getString("status");
-				
 				Task t = new Task(id,taskName,description,Status.valueOf(status));
 				tasks.add(t);
-				return tasks;
 			}
+			return tasks;
 			
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		
-		
-		return null; 
+		return tasks; 
 	}
 	
 	@Override
@@ -225,16 +212,15 @@ public class TaskRepositoryImpl implements TaskRepository{
 				
 				Task t = new Task(id,taskName,description,Status.valueOf(status));
 				tasks.add(t);
-				return tasks;
+				
 			}
+			return tasks;
 			
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		
-		return null; 
+		return tasks; 
 	}
-	
 	
 	@Override
 	public List<Task> getTaskDone() {
@@ -252,14 +238,14 @@ public class TaskRepositoryImpl implements TaskRepository{
 				
 				Task t = new Task(id,taskName,description,Status.valueOf(status));
 				tasks.add(t);
-				return tasks;
 			}
+			return tasks;
 			
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 		
-		return null;  
+		return tasks;  
 	}
 	
 }

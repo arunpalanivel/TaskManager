@@ -143,8 +143,8 @@ public class Main {
 				
 				case 6:{
 					System.out.println("Task in Todo Status. ");
-					var t = tm.getTaskDone();
-					if(t == null) {
+					var t = tm.getTaskTodo();
+					if(t.isEmpty()) {
 						System.out.println("There is no task with TODO status.");
 					}
 					else {
@@ -156,7 +156,7 @@ public class Main {
 				case 7:{
 					System.out.println("Task in In Progress Status. ");
 					var t = tm.getTaskInProgress();
-					if(t == null) {
+					if(t.isEmpty()) {
 						System.out.println("There is no task with In Progress status.");
 					}
 					else {
@@ -168,7 +168,7 @@ public class Main {
 				case 8:{
 					System.out.println("Task in Done Status. ");
 					var t = tm.getTaskDone();
-					if(t == null) {
+					if(t.isEmpty()) {
 						System.out.println("There is no task with Done status.");
 					}
 					else {

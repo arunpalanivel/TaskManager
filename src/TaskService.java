@@ -16,27 +16,34 @@ public class TaskService{
 		return repo.viewAll();
 	}
 	
-	public String updateName(long id, String taskName) { 
-		Status s = Status.TODO;
-		Task t = new Task(0,taskName,"description",s);
-		return repo.updateName(id, t.getTaskName());
+	public String updateName(long id, String taskName) {
+		if(taskName.trim().isEmpty() || taskName == null) {
+			throw new IllegalArgumentException("Task name cannot be empty");
+		}
+		return repo.updateName(id, taskName);
 	}
 	
 	public String updateDescription(long id, String description) {
-		Status s = Status.TODO;
-		Task t = new Task(0,"taskName",description,s);
-		return repo.updateDescription(id, t.getDescription());
+		if(description.trim().isEmpty() || description == null) {
+			throw new IllegalArgumentException("Task name cannot be empty");
+		}
+		return repo.updateDescription(id, description);
 	}
 	
 	public String updateStatus(long id, Status status) {
-		
-		Task t = new Task(0,"taskName","description",status);
-		return repo.updateStatus(id, t.getStatus());
+		return repo.updateStatus(id, status);
 	}
 	
 	public String updateAll(long id, String taskName, String description, Status status) {
-		Task t = new Task(0,taskName,description,status);
-		return repo.updateAll(id, t);
+		if(taskName.trim().isEmpty() || taskName == null) {
+			throw new IllegalArgumentException("Task name cannot be empty");
+		}
+		
+		if(description.trim().isEmpty() || description == null) {
+			throw new IllegalArgumentException("Task name cannot be empty");
+		}
+		
+		return repo.updateAll(id, taskName, description, status);
 	}
 	
 	public String deleteTask(long id) {
