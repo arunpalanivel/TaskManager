@@ -1,0 +1,30 @@
+# Compiled class files
+*.class
+
+# Eclipse build output
+bin/
+
+# Logs
+*.log
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# IDE-specific (optional if you switch IDEs)
+.idea/
+*.iml
