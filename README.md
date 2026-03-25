@@ -33,10 +33,10 @@ CREATE DATABASE task_manager;
 \c task_manager
 
 CREATE TABLE task (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     taskname VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    status VARCHAR(20) NOT NULL
+    description VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'TODO'
 );
 ```
 
